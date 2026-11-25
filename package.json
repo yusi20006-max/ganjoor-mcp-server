@@ -1,11 +1,11 @@
 {
   "name": "ganjoor-mcp-server",
-  "version": "0.1.1",
-  "mcpName": "io.github.ehsanghaffar/ganjoor-mcp-server",
+  "version": "1.0.0",
+  "mcpName": "io.github.yusi20006-max/ganjoor-mcp-server",
   "description": "MCP server for the Ganjoor (گنجور) Persian classical poetry API at https://ganjoor.net",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ganjoor/ganjoor-mcp-server.git"
+    "url": "git+https://github.com/yusi20006-max/ganjoor-mcp-server.git"
   },
   "type": "module",
   "main": "dist/index.js",
