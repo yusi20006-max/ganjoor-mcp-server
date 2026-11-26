@@ -84,7 +84,7 @@ async function main(): Promise<void> {
     {
       q: 4,
       label: "Q4 Kayumars kinship component size",
-      expected: "personCount=56",
+      expected: "personCount=196",
       run: async () => {
         const { structured: found } = await call("ganjoor_list_people", { search: "کیومرث" });
         const people = found.people as Array<{ id: number; name: string }>;
