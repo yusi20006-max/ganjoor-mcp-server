@@ -215,13 +215,14 @@ export async function fetchPaged<T>(
 
   const list = Array.isArray(response) ? response : [];
 
-  // Upstream ignored our paging window and handed back the full collection.
-  const upstreamPaged = list.length <= normalizedSize + 1;
-  const hasMore = upstreamPaged
-    ? list.length > normalizedSize
-    : start + normalizedSize < list.length;
+  // These two endpoints ignore paging parameters and return their full collections.
+  // All other list endpoints honor the requested window and include the extra row.
+  const ignoresPaging = /\\/(poets|rhythms)$/.test(endpoint);
+  const hasMore = ignoresPaging
+    ? start + normalizedSize < list.length
+    : list.length > normalizedSize;
 
-  const items = upstreamPaged ? list.slice(0, normalizedSize) : list.slice(start, start + normalizedSize);
+  const items = ignoresPaging ? list.slice(start, start + normalizedSize) : list.slice(0, normalizedSize);
 
   return {
     items,
