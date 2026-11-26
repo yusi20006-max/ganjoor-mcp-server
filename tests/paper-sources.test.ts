@@ -36,7 +36,7 @@ try {
     name: "ganjoor_get_category_paper_sources",
     arguments: { cat_id: 24, response_format: "json" },
   });
-  assert.equal(result.isError, false);
+  assert.ok(!result.isError, "tool should return a successful result");
   const data = result.structuredContent as Record<string, unknown>;
   assert.equal(data.category_id, 24);
   assert.equal(data.returned, 2);
