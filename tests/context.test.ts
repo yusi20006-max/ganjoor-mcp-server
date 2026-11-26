@@ -36,10 +36,14 @@ async function testContextManagement() {
   assert.match(String(clipped.structuredContent.truncation_message), /exceeded/);
   assert.ok(clipped.content[0].text.length <= CHARACTER_LIMIT);
   assert.match(clipped.content[0].text, /response truncated/);
+  assert.ok(JSON.stringify(clipped.structuredContent).length <= CHARACTER_LIMIT);
+  assert.ok(String(clipped.structuredContent.hugeMarkdown).length < 600, "structured payload should be compacted");
 
   const jsonClipped = render(ResponseFormat.JSON, { payload: "x".repeat(CHARACTER_LIMIT + 10) }, "unused");
   assert.equal(jsonClipped.structuredContent.truncated, true);
   assert.ok(jsonClipped.content[0].text.length <= CHARACTER_LIMIT);
+  assert.doesNotThrow(() => JSON.parse(jsonClipped.content[0].text), "truncated JSON response should remain valid JSON");
+  assert.ok(JSON.stringify(jsonClipped.structuredContent).length <= CHARACTER_LIMIT);
 
   console.log("Context management, clipping, and structured truncation tests passed successfully!");
 }
