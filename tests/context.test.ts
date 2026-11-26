@@ -4,6 +4,7 @@
 import assert from "node:assert";
 import { render, safeJson, compact, lines, md, bullets } from "../src/format.js";
 import { ResponseFormat } from "../src/schemas.js";
+import { CHARACTER_LIMIT } from "../src/constants.js";
 
 async function testContextManagement() {
   console.log("Running context management & formatting tests...");
@@ -29,7 +30,18 @@ async function testContextManagement() {
   assert.strictEqual(rendered.content.length, 1);
   assert.strictEqual(rendered.structuredContent.foo, "bar");
 
-  console.log("Context management & formatting tests passed successfully!");
+  const hugeMarkdown = "line\\n".repeat(CHARACTER_LIMIT);
+  const clipped = render(ResponseFormat.Markdown, { hugeMarkdown }, hugeMarkdown);
+  assert.equal(clipped.structuredContent.truncated, true);
+  assert.match(String(clipped.structuredContent.truncation_message), /exceeded/);
+  assert.ok(clipped.content[0].text.length <= CHARACTER_LIMIT);
+  assert.match(clipped.content[0].text, /response truncated/);
+
+  const jsonClipped = render(ResponseFormat.JSON, { payload: "x".repeat(CHARACTER_LIMIT + 10) }, "unused");
+  assert.equal(jsonClipped.structuredContent.truncated, true);
+  assert.ok(jsonClipped.content[0].text.length <= CHARACTER_LIMIT);
+
+  console.log("Context management, clipping, and structured truncation tests passed successfully!");
 }
 
 testContextManagement().catch((err) => {
