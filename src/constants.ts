@@ -46,5 +46,5 @@ ganjoor_get_poem_by_id.`;
 
 /** Resolve the API base dynamically so tests and runtime overrides take effect after import. */
 export function getApiBaseUrl(): string {
-  return (process.env.GANJOOR_API_BASE_URL ?? API_BASE_URL).replace(/\\/+$/, "");
+  return (process.env.GANJOOR_API_BASE_URL ?? API_BASE_URL).replace(/\/+$/, "");
 }
