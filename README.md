@@ -66,7 +66,7 @@ Or add to `.vscode/mcp.json`:
 ```json
 {
   "servers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
@@ -81,7 +81,7 @@ Or add to `.vscode/mcp.json`:
 VS Code CLI:
 
 ```bash
-code --add-mcp '{\"name\":\"io.github.ehsanghaffar/ganjoor-mcp-server\",\"command\":\"npx\",\"args\":[\"-y\",\"ganjoor-mcp-server\"],\"env\":{}}'
+code --add-mcp '{\"name\":\"io.github.yusi20006-max/ganjoor-mcp-server\",\"command\":\"npx\",\"args\":[\"-y\",\"ganjoor-mcp-server\"],\"env\":{}}'
 ```
 
 ### Claude Desktop / Cursor
@@ -95,7 +95,7 @@ Or add to your MCP config file:
 ```json
 {
   "mcpServers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
@@ -116,10 +116,10 @@ Or add to your MCP config file:
 <details>
 <summary>Claude Code</summary>
 
-Use the Claude Code CLI to add the io.github.ehsanghaffar/ganjoor-mcp-server MCP server:
+Use the Claude Code CLI to add the io.github.yusi20006-max/ganjoor-mcp-server MCP server:
 
 ```bash
-claude mcp add io.github.ehsanghaffar/ganjoor-mcp-server npx -y ganjoor-mcp-server
+claude mcp add io.github.yusi20006-max/ganjoor-mcp-server npx -y ganjoor-mcp-server
 ```
 </details>
 
@@ -158,7 +158,7 @@ Follow the MCP Servers [documentation](https://opencode.ai/docs/mcp-servers/). F
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "type": "local",
       "command": [
         "npx",
@@ -181,7 +181,7 @@ GitHub Copilot CLI supports adding MCP servers interactively and through a confi
 
 1. Open GitHub Copilot CLI in interactive mode.
 2. Run `/mcp add`.
-3. Enter **Server Name**: `io.github.ehsanghaffar/ganjoor-mcp-server`.
+3. Enter **Server Name**: `io.github.yusi20006-max/ganjoor-mcp-server`.
 4. Choose **Server Type**:
    - `STDIO` for command-based servers
    - `HTTP` for remote servers
@@ -193,7 +193,7 @@ GitHub Copilot CLI supports adding MCP servers interactively and through a confi
 ```json
 {
   "mcpServers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
