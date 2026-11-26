@@ -18,7 +18,7 @@ import express, { type Request, type Response } from "express";
 
 import { API_BASE_URL, SERVER_NAME, SERVER_VERSION } from "./constants.js";
 import { createServer } from "./server.js";
-import { hasValidBearerToken, requireHttpToken } from "./http-security.js";
+import { createBearerAuthMiddleware, requireHttpToken } from "./http-security.js";
 
 /** Validate the upstream API is reachable before serving traffic. */
 async function checkUpstream(): Promise<void> {
@@ -99,15 +99,7 @@ async function main(): Promise<void> {
 
   // Origin checks mitigate browser DNS-rebinding risks but are not authentication.
   // Require bearer authentication for every MCP HTTP request.
-  app.all("/mcp", (req: Request, res: Response, next) => {
-    if (!hasValidBearerToken(req.headers.authorization, authToken)) {
-      res.status(401).set("WWW-Authenticate", "Bearer").json({
-        jsonrpc: "2.0", error: { code: -32002, message: "Authentication required" }, id: null,
-      });
-      return;
-    }
-    next();
-  });
+  app.all("/mcp", createBearerAuthMiddleware(authToken));
 
   // Stateless streamable HTTP: a new server per request keeps it horizontally scalable.
   app.all("/mcp", async (req: Request, res: Response) => {
