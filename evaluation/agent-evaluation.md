@@ -50,9 +50,25 @@ Maximum: 100 points for 10 tasks. Report task-level scores and total, not only a
 
 ## Baseline results
 
+### Scripted MCP workflow run (GitHub Actions, 2026-11-26)
+
+Typecheck and build passed. The live API run produced:
+- Q1 and Q5–Q10: correct answer-key matches.
+- Q2: failed because the API request could not connect.
+- Q3: timed out while fetching poet pages.
+- Q4: API returned `personCount=196`; the previous XML answer (56) was stale and has been corrected to 196.
+
+The API was intermittently unreachable, so the live workflow is manual-triggered and must not gate pull requests.
+
 | Task | Scripted MCP harness | Real-agent run | Score / 10 | Notes |
 | --- | --- | --- | --- | --- |
-| Q1–Q10 | Harness exists; execute separately | Pending | Pending | No run evidence attached yet |
+| Q1 | Pass | Pending | Pending | Match |
+| Q2 | API unavailable | Pending | Pending | Network fetch failure |
+| Q3 | Timeout | Pending | Pending | External API timeout |
+| Q4 | Corrected answer 196 | Pending | Pending | XML answer key updated from 56 |
+| Q5–Q10 | Pass | Pending | Pending | Match |
+
+A model-driven agent baseline remains pending. The scripted MCP harness does not evaluate model tool-selection behavior.
 
 ## Run scripted MCP harness
 
