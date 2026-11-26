@@ -280,16 +280,21 @@ Add to your MCP config file:
 }
 ```
 
-### Streamable HTTP (remote / shared deployment)
+### Streamable HTTP (local / remote deployment)
+
+HTTP mode requires a bearer token of at least 32 characters. Generate one with `openssl rand -hex 32`.
+Keep the token private and use HTTPS if traffic crosses an untrusted network. Origin checks are an
+additional browser/DNS-rebinding defense, not authentication.
 
 ```bash
+export MCP_AUTH_TOKEN="$(openssl rand -hex 32)"
 HTTP=true PORT=3000 npm start
 ```
 
-The MCP endpoint is `POST /mcp`, and `GET /health` reports server and upstream status. The HTTP
-transport runs statelessly (a fresh server instance per request), so it scales horizontally. It binds
-`127.0.0.1` by default and validates the `Origin` header to block DNS-rebinding attacks; set
-`ALLOWED_ORIGINS` (comma-separated) if you need non-loopback origins.
+The MCP endpoint is `POST /mcp`; authenticate with `Authorization: Bearer <token>`. `GET /health`
+remains unauthenticated for health checks and reports upstream status. The transport is stateless.
+It binds `127.0.0.1` by default. For non-loopback binding, configure token authentication, restrict
+network access, and terminate TLS at a trusted reverse proxy. Origin validation is not authentication.
 
 ### MCP Inspector
 
@@ -308,14 +313,15 @@ A multi-stage `Dockerfile` and a `docker-compose.yml` are included. The image is
 docker compose up --build
 ```
 
-The compose file starts the server in **streamable HTTP mode** on `http://localhost:3000/mcp`, with
-`GET /health` reporting server and upstream status. `HOST` is set to `0.0.0.0` so the published port
-is reachable from the host; every configuration variable from the table below works as an ordinary
-environment variable. To run a single container without compose:
+Compose requires an `MCP_AUTH_TOKEN` environment variable and binds the published port to host loopback
+(`127.0.0.1:3000`). Generate a token with `openssl rand -hex 32`. The container binds internally to
+`0.0.0.0`, but external access is limited by the host port binding and bearer auth. For direct Docker
+runs, pass the token securely and avoid publishing the port publicly:
 
 ```bash
 docker build -t ganjoor-mcp .
-docker run --rm -p 3000:3000 -e HTTP=true -e HOST=0.0.0.0 ganjoor-mcp
+docker run --rm -p 127.0.0.1:3000:3000 -e HTTP=true -e HOST=0.0.0.0 \\
+  -e MCP_AUTH_TOKEN="$(openssl rand -hex 32)" ganjoor-mcp
 ```
 
 ### stdio transport over Docker
@@ -353,7 +359,8 @@ All settings are environment variables; none are required.
 | `HTTP` | *(unset)* | Set to `true` to serve streamable HTTP instead of stdio. |
 | `PORT` | `3000` | HTTP port. |
 | `HOST` | `127.0.0.1` | HTTP bind address. |
-| `ALLOWED_ORIGINS` | *(empty)* | Extra allowed `Origin` values, comma-separated. |
+| `ALLOWED_ORIGINS` | *(empty)* | Extra allowed `Origin` values, comma-separated. Origin checks are not authentication. |
+| `MCP_AUTH_TOKEN` | *(required in HTTP mode)* | Bearer token, minimum 32 characters. Required for every HTTP MCP request. |
 | `GANJOOR_API_BASE_URL` | `https://api.ganjoor.net` | Upstream API base URL — point at a local RMuseum instance for development. |
 | `GANJOOR_SITE_BASE_URL` | `https://ganjoor.net` | Front-end base used to build clickable links. |
 
