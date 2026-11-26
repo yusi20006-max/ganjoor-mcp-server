@@ -30,11 +30,11 @@ async function testPagination() {
     assert.equal(last.has_more, false);
     assert.equal(last.next_page, null);
 
-    globalThis.fetch = async () => new Response(JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }]), { status: 200 });
+    globalThis.fetch = async () => new Response(JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }]), { status: 200 });
     const ignoredPaging = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
-    assert.deepEqual(ignoredPaging.items, [{ id: 3 }, { id: 4 }]);
-    assert.equal(ignoredPaging.has_more, true);
-    assert.equal(ignoredPaging.next_page, 3);
+    assert.deepEqual(ignoredPaging.items, [{ id: 3 }], "unpaged endpoint slices correctly even at pageSize+1 boundary");
+    assert.equal(ignoredPaging.has_more, false);
+    assert.equal(ignoredPaging.next_page, null);
   } finally {
     globalThis.fetch = originalFetch;
   }
