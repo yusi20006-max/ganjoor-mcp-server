@@ -12,10 +12,11 @@ services:
       HOST: 0.0.0.0
       # Extra allowed Origin values, comma-separated (loopback is always allowed).
       ALLOWED_ORIGINS: ""
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?Set MCP_AUTH_TOKEN in your environment}
       # Point at a local RMuseum instance during development.
       # GANJOOR_API_BASE_URL: https://api.ganjoor.net
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     restart: unless-stopped
 
   # Interactive stdio transport, for MCP clients that launch the server themselves.
