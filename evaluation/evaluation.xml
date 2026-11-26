@@ -14,7 +14,7 @@
    </qa_pair>
    <qa_pair>
       <question>Ganjoor has a related-people knowledge graph separate from its list of poets. Starting from the person whose name is کیومرث (the Pishdadian dynasty figure), walk the kinship graph and count how many distinct people are in the connected component that contains him. Give the count as an integer.</question>
-      <answer>56</answer>
+      <answer>196</answer>
    </qa_pair>
    <qa_pair>
       <question>Count how many separate audio recitations Ganjoor has published for Hafez's ghazal number 494 at URL /hafez/ghazal/sh494. Give the count as an integer.</question>
