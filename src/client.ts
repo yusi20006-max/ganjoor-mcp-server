@@ -217,7 +217,7 @@ export async function fetchPaged<T>(
 
   // These two endpoints ignore paging parameters and return their full collections.
   // All other list endpoints honor the requested window and include the extra row.
-  const ignoresPaging = /\\/(poets|rhythms)$/.test(endpoint);
+  const ignoresPaging = /\/(poets|rhythms)$/.test(endpoint);
   const hasMore = ignoresPaging
     ? start + normalizedSize < list.length
     : list.length > normalizedSize;
