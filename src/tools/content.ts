@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ganjoorGet } from "../client.js";
 import { IdSchema, ResponseFormatSchema } from "../schemas.js";
-import { bullets, md, siteUrl } from "../format.js";
+import { bullets, md, siteUrl, safeJson } from "../format.js";
 import { defineTool, READ_ONLY } from "./registry.js";
 import type { GanjoorQuotedPoem } from "../types.js";
 
