@@ -95,6 +95,8 @@ async function run() {
     console.log("ganjoor_find_similar_poems response:", JSON.stringify(resSimilar).slice(0, 150));
     assert.ok(!resSimilar.isError, "ganjoor_find_similar_poems should succeed with mock");
 
+    assert.ok(requestedUrls.length >= 4, "requests must be served by the local mock");
+    assert.ok(requestedUrls.every((url) => url.startsWith("/api/ganjoor/")), "all test requests must hit local mock routes");
     console.log("\nALL OFFLINE TESTS PASSED SUCCESSFULLY!");
   } finally {
     mockServer.close();
