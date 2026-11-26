@@ -472,6 +472,7 @@ graph TD
 | `ganjoor_get_poem_quoted_poems` | Poems this one quotes, and poems quoting it. |
 | `ganjoor_get_poem_effective_corrections` | The editorial before/after record of text corrections. |
 | `ganjoor_get_poem_geotags` | Places and commemorative dates tagged to one poem. |
+| `ganjoor_get_category_paper_sources` | Bibliographic/paper-source metadata associated with a category. |
 
 Every tool is annotated `readOnlyHint`, `idempotentHint`, and `openWorldHint`, and none of them
 modify state on Ganjoor.
