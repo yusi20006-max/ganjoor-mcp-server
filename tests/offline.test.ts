@@ -11,7 +11,9 @@ import assert from "node:assert";
 
 async function run() {
   // 1. Start a local mock HTTP server mimicking api.ganjoor.net
+  const requestedUrls: string[] = [];
   const mockServer = http.createServer((req, res) => {
+    requestedUrls.push(req.url ?? "");
     res.setHeader("Content-Type", "application/json");
 
     if (req.url?.startsWith("/api/ganjoor/poets")) {
