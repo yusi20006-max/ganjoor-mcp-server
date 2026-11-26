@@ -25,7 +25,8 @@
     "test": "tsx tests/smoke.test.ts",
     "inspect": "tsx tests/inspect-output.ts",
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test:paper-sources": "tsx tests/paper-sources.test.ts"
   },
   "keywords": [
     "mcp",
