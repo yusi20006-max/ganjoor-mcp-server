@@ -203,30 +203,32 @@ export async function fetchPaged<T>(
   pageSize: number,
   params: Record<string, QueryValue> = {},
 ): Promise<PagedList<T>> {
-  const start = (page - 1) * pageSize;
+  const normalizedPage = Number.isFinite(page) ? Math.max(1, Math.floor(page)) : 1;
+  const normalizedSize = Number.isFinite(pageSize) ? Math.max(1, Math.floor(pageSize)) : 1;
+  const start = (normalizedPage - 1) * normalizedSize;
   // Ask for one extra record to detect whether another page exists.
   const response = await ganjoorGet<T[]>(endpoint, {
     ...params,
-    PageNumber: page,
-    PageSize: pageSize + 1,
+    PageNumber: normalizedPage,
+    PageSize: normalizedSize + 1,
   });
 
   const list = Array.isArray(response) ? response : [];
 
   // Upstream ignored our paging window and handed back the full collection.
-  const upstreamPaged = list.length <= pageSize + 1;
+  const upstreamPaged = list.length <= normalizedSize + 1;
   const hasMore = upstreamPaged
-    ? list.length > pageSize
-    : start + pageSize < list.length;
+    ? list.length > normalizedSize
+    : start + normalizedSize < list.length;
 
-  const items = upstreamPaged ? list.slice(0, pageSize) : list.slice(start, start + pageSize);
+  const items = upstreamPaged ? list.slice(0, normalizedSize) : list.slice(start, start + normalizedSize);
 
   return {
     items,
-    page,
-    page_size: pageSize,
+    page: normalizedPage,
+    page_size: normalizedSize,
     has_more: hasMore,
-    next_page: hasMore ? page + 1 : null,
+    next_page: hasMore ? normalizedPage + 1 : null,
   };
 }
 
@@ -236,11 +238,14 @@ export function applySkipPaging<T>(
   skip: number,
   itemsCount: number,
 ): { items: T[]; hasMore: boolean; nextSkip: number | null } {
-  const windowed = all.slice(skip);
-  const hasMore = itemsCount > 0 && windowed.length > itemsCount;
+  const normalizedSkip = Number.isFinite(skip) ? Math.max(0, Math.floor(skip)) : 0;
+  const normalizedCount = Number.isFinite(itemsCount) ? Math.max(0, Math.floor(itemsCount)) : 0;
+  if (normalizedCount === 0) return { items: [], hasMore: false, nextSkip: null };
+  const windowed = all.slice(normalizedSkip);
+  const hasMore = windowed.length > normalizedCount;
   return {
-    items: hasMore ? windowed.slice(0, itemsCount) : windowed,
+    items: hasMore ? windowed.slice(0, normalizedCount) : windowed,
     hasMore,
-    nextSkip: hasMore ? skip + itemsCount : null,
+    nextSkip: hasMore ? normalizedSkip + normalizedCount : null,
   };
 }
