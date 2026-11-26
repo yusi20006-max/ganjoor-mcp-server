@@ -1,0 +1,33 @@
+name: Metadata Consistency
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validate package and server metadata
+        run: |
+          node --input-type=module <<'NODE'
+          import fs from 'node:fs';
+          const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+          const server = JSON.parse(fs.readFileSync('server.json', 'utf8'));
+          const expectedName = 'io.github.yusi20006-max/ganjoor-mcp-server';
+          const expectedRepo = 'https://github.com/yusi20006-max/ganjoor-mcp-server';
+          if (pkg.mcpName !== expectedName || server.name !== expectedName) throw new Error('MCP identity mismatch');
+          if (pkg.version !== server.version || server.packages[0].version !== server.version) throw new Error('Version mismatch');
+          if (!pkg.repository.url.includes('yusi20006-max/ganjoor-mcp-server') || server.repository.url !== expectedRepo) throw new Error('Repository attribution mismatch');
+          console.log('Metadata consistency passed:', pkg.version, expectedName);
+          NODE
+      - run: npm run typecheck
+      - run: npm run build
