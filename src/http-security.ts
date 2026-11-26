@@ -15,3 +15,18 @@ export function requireHttpToken(token: string | undefined): string {
   }
   return token;
 }
+
+import type { Request, Response, NextFunction } from "express";
+
+/** Express middleware factory that protects an MCP HTTP route. */
+export function createBearerAuthMiddleware(expectedToken: string) {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!hasValidBearerToken(req.headers.authorization, expectedToken)) {
+      res.status(401).set("WWW-Authenticate", "Bearer").json({
+        jsonrpc: "2.0", error: { code: -32002, message: "Authentication required" }, id: null,
+      });
+      return;
+    }
+    next();
+  };
+}
