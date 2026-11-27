@@ -39,8 +39,8 @@ async function main(): Promise<void> {
     },
     {
       q: 2,
-      label: "Q2 most-used metre vs ghazal 494 (expect False / 8)",
-      expected: "same=false | verses=8",
+      label: "Q2 most-used metre vs ghazal 494 (expect False / 16 verses)",
+      expected: "same=false | verses=16",
       run: async () => {
         const { structured: rh } = await call("ganjoor_list_rhythms", { page_size: 100 });
         const rhythms = rh.rhythms as Array<{ rhythm: string; verse_count: number }>;
