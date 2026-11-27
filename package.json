@@ -28,7 +28,8 @@
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
     "clean": "rm -rf dist",
     "test:pagination": "tsx tests/pagination.test.ts",
-    "test:paper-sources": "tsx tests/paper-sources.test.ts"
+    "test:paper-sources": "tsx tests/paper-sources.test.ts",
+    "test:http-security": "tsx tests/http-security.test.ts"
   },
   "keywords": [
     "mcp",
