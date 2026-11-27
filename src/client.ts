@@ -223,7 +223,9 @@ export async function fetchPaged<T>(
   const usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
   const hasMore = usesLocalPaging
     ? start + normalizedSize < list.length
-    : list.length >= normalizedSize;
+    : mayIgnorePaging
+      ? list.length >= normalizedSize
+      : list.length > normalizedSize;
 
   const items = usesLocalPaging
     ? list.slice(start, start + normalizedSize)
