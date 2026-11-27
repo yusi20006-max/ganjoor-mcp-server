@@ -23,7 +23,7 @@ async function testContextManagement() {
 
   // Test render and truncation check
   const rendered = render(
-    ResponseFormat.Markdown,
+    ResponseFormat.MARKDOWN,
     { foo: "bar" },
     "# Test header\nSome content"
   );
@@ -31,7 +31,7 @@ async function testContextManagement() {
   assert.strictEqual(rendered.structuredContent.foo, "bar");
 
   const hugeMarkdown = "line\\n".repeat(CHARACTER_LIMIT);
-  const clipped = render(ResponseFormat.Markdown, { hugeMarkdown }, hugeMarkdown);
+  const clipped = render(ResponseFormat.MARKDOWN, { hugeMarkdown }, hugeMarkdown);
   assert.equal(clipped.structuredContent.truncated, true);
   assert.match(String(clipped.structuredContent.truncation_message), /exceeded/);
   assert.ok(clipped.content[0].text.length <= CHARACTER_LIMIT);
