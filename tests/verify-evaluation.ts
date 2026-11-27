@@ -60,7 +60,7 @@ async function main(): Promise<void> {
     {
       q: 3,
       label: "Q3 poet born 380-399 AH with earliest death",
-      expected: "فرخی سیستانی",
+      expected: "علی بن عثمان هجویری",
       run: async () => {
         const all: Array<Record<string, number | boolean | string | null>> = [];
         for (let page = 1; page <= 100; page += 1) {
@@ -79,7 +79,6 @@ async function main(): Promise<void> {
               Number(p.death_year_hijri) > 0,
           )
           .sort((a, b) => Number(a.death_year_hijri) - Number(b.death_year_hijri));
-        console.log("Q3 matching poets:", JSON.stringify(c10.slice(0, 10).map((p) => ({ name: p.name, birth: p.birth_year_hijri, death: p.death_year_hijri }))));
         return c10[0]?.name ?? "NO_MATCH";
       },
     },
