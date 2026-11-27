@@ -478,6 +478,7 @@ graph TD
 | `ganjoor_get_faq_item` | A single FAQ entry by id. |
 | `ganjoor_get_poem_images` | Manuscript and facsimile images. |
 | `ganjoor_get_poem_quoted_poems` | Poems this one quotes, and poems quoting it. |
+| `ganjoor_get_category_paper_sources` | Bibliographic and paper-source metadata for a category. |
 | `ganjoor_get_poem_effective_corrections` | The editorial before/after record of text corrections. |
 | `ganjoor_get_poem_geotags` | Places and commemorative dates tagged to one poem. |
 
