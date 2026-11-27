@@ -18,6 +18,7 @@ import express, { type Request, type Response } from "express";
 
 import { API_BASE_URL, SERVER_NAME, SERVER_VERSION } from "./constants.js";
 import { createServer } from "./server.js";
+import { createBearerAuthMiddleware, requireHttpToken } from "./http-security.js";
 
 /** Validate the upstream API is reachable before serving traffic. */
 async function checkUpstream(): Promise<void> {
@@ -56,8 +57,8 @@ async function main(): Promise<void> {
 
   const port = Number(process.env.PORT ?? 3000);
   const host = process.env.HOST ?? "127.0.0.1";
+  const authToken = requireHttpToken(process.env.MCP_AUTH_TOKEN);
   const app = express();
-  app.use(express.json({ limit: "1mb" }));
 
   // DNS-rebinding protection: only accept loopback origins by default.
   const allowedOrigins = (process.env.ALLOWED_ORIGINS ?? "")
@@ -95,8 +96,16 @@ async function main(): Promise<void> {
     }
   });
 
-  // Stateless streamable HTTP: a new server per request keeps it horizontally scalable.
-  app.all("/mcp", async (req: Request, res: Response) => {
+  // Origin checks mitigate browser DNS-rebinding risks but are not authentication.
+  // Require bearer authentication for every MCP HTTP request.
+  // Authenticate before parsing request bodies so unauthenticated malformed or oversized
+  // payloads receive the same 401 response as every other protected MCP request.
+  app.all(
+    "/mcp",
+    createBearerAuthMiddleware(authToken),
+    express.json({ limit: "1mb" }),
+    // Stateless streamable HTTP: a new server per request keeps it horizontally scalable.
+    async (req: Request, res: Response) => {
     try {
       const server = createServer();
       const transport = new StreamableHTTPServerTransport({
@@ -120,7 +129,8 @@ async function main(): Promise<void> {
         });
       }
     }
-  });
+  },
+  );
 
   await checkUpstream();
 

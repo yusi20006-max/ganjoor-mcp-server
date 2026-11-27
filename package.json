@@ -29,7 +29,8 @@
     "clean": "rm -rf dist",
     "test:pagination": "tsx tests/pagination.test.ts",
     "test:paper-sources": "tsx tests/paper-sources.test.ts",
-    "test:context": "tsx tests/context.test.ts"
+    "test:context": "tsx tests/context.test.ts",
+    "test:http-security": "tsx tests/http-security.test.ts"
   },
   "keywords": [
     "mcp",
