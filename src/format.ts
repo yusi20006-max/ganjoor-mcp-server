@@ -21,10 +21,12 @@ export function render(
   structuredContent: Record<string, unknown>;
 } {
   const originalText = format === ResponseFormat.JSON ? safeJson(data) : markdown;
+  const structuredOverLimit = safeJson(data).length > CHARACTER_LIMIT;
+  const textOverLimit = originalText.length > CHARACTER_LIMIT;
   let text = originalText;
   let payload: Record<string, unknown> = data;
 
-  if (originalText.length > CHARACTER_LIMIT) {
+  if (structuredOverLimit || textOverLimit) {
     const message =
       `Response exceeded ${CHARACTER_LIMIT} characters and was clipped. ` +
       "Narrow the request with page/page_size, items_count, or an `exclude_fields` argument.";
@@ -33,10 +35,13 @@ export function render(
       truncated: true,
       truncation_message: message,
     };
+  }
+
+  if (textOverLimit) {
     if (format === ResponseFormat.JSON) {
       text = safeJson(payload);
       if (text.length > CHARACTER_LIMIT) {
-        payload = { truncated: true, truncation_message: message };
+        payload = { truncated: true, truncation_message: "Response was truncated." };
         text = safeJson(payload);
       }
     } else {
