@@ -53,7 +53,7 @@ try {
   const malformedData = malformed.structuredContent as Record<string, unknown>;
   assert.deepEqual(malformedData.paper_sources, []);
   assert.equal(malformedData.upstream_shape_valid, false);
-  assert.equal(malformedData.returned, 0);
+  assert.equal(malformedData.returned, 0);\n  assert.equal(malformedData.total, 0);
   assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources", "/api/ganjoor/cat/25/papersources"]);
   await client.close();
   await server.close();
