@@ -90,6 +90,35 @@ Notes:
     },
   );
 
+  defineTool(server, {
+    name: "ganjoor_get_category_paper_sources",
+    title: "Get Category Paper Sources",
+    description: "Get read-only bibliographic/paper-source metadata for a Ganjoor category. Metadata only; external URLs are validated but never fetched. At most 100 records are returned.",
+    inputSchema: z.object({ cat_id: IdSchema.describe("Numeric Ganjoor category id."), response_format: ResponseFormatSchema }).strict(),
+    annotations: READ_ONLY,
+  }, async (args) => {
+    const input = args as unknown as { cat_id: number };
+    const raw = await ganjoorGet<unknown>("/api/ganjoor/cat/" + input.cat_id + "/papersources");
+    const list = Array.isArray(raw) ? raw : [];
+    const normalize = (item: unknown): unknown => {
+      if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+      const record = item as Record<string, unknown>;
+      const normalized = { ...record };
+      for (const key of ["url", "sourceUrl", "link"]) {
+        if (typeof normalized[key] === "string") {
+          try {
+            const url = new URL(normalized[key] as string);
+            normalized[key] = url.protocol === "http:" || url.protocol === "https:" ? url.toString() : null;
+          } catch { normalized[key] = null; }
+        }
+      }
+      return normalized;
+    };
+    const sources = list.slice(0, 100).map(normalize);
+    const data = { category_id: input.cat_id, paper_sources: sources, returned: sources.length, total: list.length, truncated: list.length > 100 };
+    return { data, markdown: () => md("# Paper sources for category " + input.cat_id, "", "Returned " + data.returned + " of " + data.total + " records" + (data.truncated ? " (truncated to 100)." : "."), "", safeJson({ paper_sources: sources })) };
+  });
+
   defineTool(
     server,
     {
