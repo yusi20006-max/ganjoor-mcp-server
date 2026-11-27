@@ -34,7 +34,7 @@ async function main(): Promise<void> {
           items_count: 0,
         });
         const quotes = structured.quotes as Array<{ related_poet_name: string | null }>;
-        return [...new Set(quotes.map((q) => q.related_poet_name))].join(" | ");
+        return [...new Set(quotes.map((q) => q.related_poet_name).filter((name): name is string => Boolean(name)))].sort().join(" | ");
       },
     },
     {
@@ -92,7 +92,7 @@ async function main(): Promise<void> {
         const { structured } = await call("ganjoor_get_person_family_tree", {
           person_id: kayumars?.id ?? 1,
         });
-        return `personCount=${structured.person_count} relations=${structured.relation_count}`;
+        return `personCount=${structured.person_count}`;
       },
     },
     {
@@ -137,7 +137,7 @@ async function main(): Promise<void> {
         const { structured: cats } = await call("ganjoor_list_faq_categories", {});
         const categories = cats.categories as Array<{ id: number; title: string }>;
         const cat = categories.find((c) => c.id === 2);
-        return `entryId=${entry?.id} category=${cat?.title}`;
+        return entry && cat ? cat.title : "NO_MATCH";
       },
     },
     {
@@ -158,7 +158,7 @@ async function main(): Promise<void> {
           cat_id: first.id,
           include_children: false,
         });
-        return `dafter1Id=${first.id} poems=${d1.poems_total}`;
+        return `poems=${d1.poems_total}`;
       },
     },
     {
@@ -171,7 +171,7 @@ async function main(): Promise<void> {
           poem_id: 13836,
           include_recitations: false,
         });
-        return `${url.url} => ${structured.full_title}`;
+        return String(structured.full_title ?? "NO_MATCH");
       },
     },
     {
@@ -190,7 +190,7 @@ async function main(): Promise<void> {
   for (const check of checks) {
     try {
       const result = await check.run();
-      const passed = result.includes(check.expected);
+      const passed = result === check.expected;
       if (!passed) process.exitCode = 1;
       console.log(`Q${String(check.q).padStart(2)} ${passed ? "✓" : "✗"} ${check.label}\n     → ${result}\n     expected: ${check.expected}`);
     } catch (error) {
