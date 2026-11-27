@@ -44,7 +44,9 @@ async function testPagination() {
       assert.equal(url.searchParams.get("PageSize"), "3");
       const rows = page === 1
         ? [{ id: 1 }, { id: 2 }, { id: 3 }]
-        : [{ id: 3 }, { id: 4 }, { id: 5 }];
+        : page === 2
+          ? [{ id: 3 }, { id: 4 }, { id: 5 }]
+          : [{ id: 5 }];
       return new Response(JSON.stringify(rows), { status: 200 });
     };
     const upstreamFirst = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 1, 2);
@@ -53,6 +55,10 @@ async function testPagination() {
     const upstreamSecond = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
     assert.deepEqual(upstreamSecond.items, [{ id: 3 }, { id: 4 }]);
     assert.equal(upstreamSecond.has_more, true);
+    const upstreamLast = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 3, 2);
+    assert.deepEqual(upstreamLast.items, [{ id: 5 }]);
+    assert.equal(upstreamLast.has_more, false);
+    assert.equal(upstreamLast.next_page, null);
   } finally {
     globalThis.fetch = originalFetch;
   }
