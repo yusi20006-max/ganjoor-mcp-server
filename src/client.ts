@@ -215,14 +215,19 @@ export async function fetchPaged<T>(
 
   const list = Array.isArray(response) ? response : [];
 
-  // These two endpoints ignore paging parameters and return their full collections.
-  // All other list endpoints honor the requested window and include the extra row.
-  const ignoresPaging = /\/(poets|rhythms)$/.test(endpoint);
-  const hasMore = ignoresPaging
+  // The poets/rhythms endpoints have been observed in both modes: some responses
+  // contain the full collection (then slice locally), while others honor PageNumber
+  // and return only the requested window. A response larger than this page plus the
+  // extra-row probe is the full-collection mode; otherwise treat it as upstream-paged.
+  const mayIgnorePaging = /\/(poets|rhythms)$/.test(endpoint);
+  const usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
+  const hasMore = usesLocalPaging
     ? start + normalizedSize < list.length
-    : list.length > normalizedSize;
+    : list.length >= normalizedSize;
 
-  const items = ignoresPaging ? list.slice(start, start + normalizedSize) : list.slice(0, normalizedSize);
+  const items = usesLocalPaging
+    ? list.slice(start, start + normalizedSize)
+    : list.slice(0, normalizedSize);
 
   return {
     items,
