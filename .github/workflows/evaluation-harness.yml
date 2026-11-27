@@ -1,6 +1,8 @@
 name: Scripted MCP Evaluation
 
 on:
+  push:
+    branches: [fix/evaluation-q3-current-data]
   pull_request:
     branches: [main]
     paths:
