@@ -401,7 +401,20 @@ Notes:
       const input = args as unknown as { cat_id: number };
       const raw = await ganjoorGet<unknown>(`/api/ganjoor/cat/${input.cat_id}/papersources`);
       const list = Array.isArray(raw) ? raw : null;
-      const sources = list ? list.slice(0, 100) : raw;
+      const normalize = (item: unknown): unknown => {
+        if (!item || typeof item !== "object" || Array.isArray(item)) return item;
+        const normalized = { ...(item as Record<string, unknown>) };
+        for (const key of ["url", "sourceUrl", "link"]) {
+          if (typeof normalized[key] === "string") {
+            try {
+              const parsed = new URL(normalized[key] as string);
+              normalized[key] = parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
+            } catch { normalized[key] = null; }
+          }
+        }
+        return normalized;
+      };
+      const sources = list ? list.slice(0, 100).map(normalize) : raw;
       const data = {
         category_id: input.cat_id,
         paper_sources: sources,
