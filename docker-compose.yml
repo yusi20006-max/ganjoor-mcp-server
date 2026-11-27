@@ -12,7 +12,7 @@ services:
       HOST: 0.0.0.0
       # Extra allowed Origin values, comma-separated (loopback is always allowed).
       ALLOWED_ORIGINS: ""
-      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:?Set MCP_AUTH_TOKEN in your environment}
+      MCP_AUTH_TOKEN: ${MCP_AUTH_TOKEN:-}
       # Point at a local RMuseum instance during development.
       # GANJOOR_API_BASE_URL: https://api.ganjoor.net
     ports:
