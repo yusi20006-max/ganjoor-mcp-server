@@ -37,7 +37,16 @@ async function testPagination() {
     assert.equal(ignoredPaging.has_more, true);
     assert.equal(ignoredPaging.next_page, 3);
 
-    // Upstream-paged mode: the endpoint returns only the requested window plus one extra row.
+    // Exact boundary: a full collection of page_size + 1 rows must still be sliced locally.
+    globalThis.fetch = async () => new Response(JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }]), { status: 200 });
+    const fullBoundaryFirst = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 1, 2);
+    assert.deepEqual(fullBoundaryFirst.items, [{ id: 1 }, { id: 2 }]);
+    assert.equal(fullBoundaryFirst.has_more, true);
+    const fullBoundarySecond = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
+    assert.deepEqual(fullBoundarySecond.items, [{ id: 3 }]);
+    assert.equal(fullBoundarySecond.has_more, false);
+
+    // Upstream-paged mode: the final page can contain exactly page_size rows.
     globalThis.fetch = async (input) => {
       const url = new URL(String(input));
       const page = Number(url.searchParams.get("PageNumber"));
@@ -45,8 +54,8 @@ async function testPagination() {
       const rows = page === 1
         ? [{ id: 1 }, { id: 2 }, { id: 3 }]
         : page === 2
-          ? [{ id: 3 }, { id: 4 }, { id: 5 }]
-          : [{ id: 5 }];
+          ? [{ id: 3 }, { id: 4 }]
+          : [];
       return new Response(JSON.stringify(rows), { status: 200 });
     };
     const upstreamFirst = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 1, 2);
@@ -54,11 +63,8 @@ async function testPagination() {
     assert.equal(upstreamFirst.has_more, true);
     const upstreamSecond = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
     assert.deepEqual(upstreamSecond.items, [{ id: 3 }, { id: 4 }]);
-    assert.equal(upstreamSecond.has_more, true);
-    const upstreamLast = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 3, 2);
-    assert.deepEqual(upstreamLast.items, [{ id: 5 }]);
-    assert.equal(upstreamLast.has_more, false);
-    assert.equal(upstreamLast.next_page, null);
+    assert.equal(upstreamSecond.has_more, false, "an exact-size final upstream page has no next page");
+    assert.equal(upstreamSecond.next_page, null);
   } finally {
     globalThis.fetch = originalFetch;
   }
