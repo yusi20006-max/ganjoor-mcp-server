@@ -30,11 +30,29 @@ async function testPagination() {
     assert.equal(last.has_more, false);
     assert.equal(last.next_page, null);
 
-    globalThis.fetch = async () => new Response(JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }]), { status: 200 });
+    // Full-collection mode: the endpoint ignores PageNumber/PageSize and returns all rows.
+    globalThis.fetch = async () => new Response(JSON.stringify([{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]), { status: 200 });
     const ignoredPaging = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
-    assert.deepEqual(ignoredPaging.items, [{ id: 3 }], "unpaged endpoint slices correctly even at pageSize+1 boundary");
-    assert.equal(ignoredPaging.has_more, false);
-    assert.equal(ignoredPaging.next_page, null);
+    assert.deepEqual(ignoredPaging.items, [{ id: 3 }, { id: 4 }], "full collection is sliced locally");
+    assert.equal(ignoredPaging.has_more, true);
+    assert.equal(ignoredPaging.next_page, 3);
+
+    // Upstream-paged mode: the endpoint returns only the requested window plus one extra row.
+    globalThis.fetch = async (input) => {
+      const url = new URL(String(input));
+      const page = Number(url.searchParams.get("PageNumber"));
+      assert.equal(url.searchParams.get("PageSize"), "3");
+      const rows = page === 1
+        ? [{ id: 1 }, { id: 2 }, { id: 3 }]
+        : [{ id: 3 }, { id: 4 }, { id: 5 }];
+      return new Response(JSON.stringify(rows), { status: 200 });
+    };
+    const upstreamFirst = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 1, 2);
+    assert.deepEqual(upstreamFirst.items, [{ id: 1 }, { id: 2 }]);
+    assert.equal(upstreamFirst.has_more, true);
+    const upstreamSecond = await fetchPaged<{ id: number }>("/api/ganjoor/poets", 2, 2);
+    assert.deepEqual(upstreamSecond.items, [{ id: 3 }, { id: 4 }]);
+    assert.equal(upstreamSecond.has_more, true);
   } finally {
     globalThis.fetch = originalFetch;
   }
