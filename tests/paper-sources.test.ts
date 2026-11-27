@@ -45,7 +45,7 @@ try {
   assert.equal(sources.length, 100);
   assert.equal(sources[0].url, null, "unsafe non-http URL is nulled");
   assert.equal(sources[1].url, "https://example.org/1");\n  assert.equal(sources[2].url, null, "credentialed URLs are removed");\n  assert.equal(data.upstream_shape_valid, true);\n  const malformed = await client.callTool({ name: "ganjoor_get_category_paper_sources", arguments: { cat_id: 25, response_format: "json" } });\n  assert.ok(!malformed.isError);\n  const malformedData = malformed.structuredContent as Record<string, unknown>;\n  assert.deepEqual(malformedData.paper_sources, []);\n  assert.equal(malformedData.upstream_shape_valid, false);\n  assert.equal(malformedData.returned, 0);
-  assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources"]);
+  assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources", "/api/ganjoor/cat/25/papersources"]);
   await client.close();
   await server.close();
 } finally {
