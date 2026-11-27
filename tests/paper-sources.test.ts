@@ -10,9 +10,9 @@ const mock = http.createServer((req, res) => {
   if (req.url === "/api/ganjoor/cat/24/papersources") {
     res.writeHead(200);
     res.end(JSON.stringify(Array.from({ length: 102 }, (_, id) => ({
-      id, title: "Source " + id, author: "Editor " + id, url: id === 0 ? "javascript:alert(1)" : "https://example.org/" + id,
+      id, title: "Source " + id, author: "Editor " + id, url: id === 0 ? "javascript:alert(1)" : id === 2 ? "https://user:pass@example.org/2" : "https://example.org/" + id,
     }))));
-  } else {
+  } else if (req.url === "/api/ganjoor/cat/25/papersources") { res.writeHead(200); res.end(JSON.stringify({ malformed: true, oversized: "x".repeat(20000) }));\n  } else {
     res.writeHead(404);
     res.end(JSON.stringify({ error: "Not found" }));
   }
@@ -44,7 +44,7 @@ try {
   const sources = data.paper_sources as Array<Record<string, unknown>>;
   assert.equal(sources.length, 100);
   assert.equal(sources[0].url, null, "unsafe non-http URL is nulled");
-  assert.equal(sources[1].url, "https://example.org/1");
+  assert.equal(sources[1].url, "https://example.org/1");\n  assert.equal(sources[2].url, null, "credentialed URLs are removed");\n  assert.equal(data.upstream_shape_valid, true);\n  const malformed = await client.callTool({ name: "ganjoor_get_category_paper_sources", arguments: { cat_id: 25, response_format: "json" } });\n  assert.ok(!malformed.isError);\n  const malformedData = malformed.structuredContent as Record<string, unknown>;\n  assert.deepEqual(malformedData.paper_sources, []);\n  assert.equal(malformedData.upstream_shape_valid, false);\n  assert.equal(malformedData.returned, 0);
   assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources"]);
   await client.close();
   await server.close();
