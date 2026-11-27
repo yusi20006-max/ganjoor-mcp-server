@@ -55,7 +55,7 @@ npm install ganjoor-mcp-server
 برای نصب سرور Ganjoor MCP در فضای کاری VS Code، روی نشان زیر کلیک کنید. این کار به‌طور خودکار سرور را به
 پیکربندی `.vscode/mcp.json` شما اضافه می‌کند.
 
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=io.github.ehsanghaffar%2Fganjoor-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ganjoor-mcp-server%22%5D%2C%22env%22%3A%7B%7D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=io.github.yusi20006-max%2Fganjoor-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ganjoor-mcp-server%22%5D%2C%22env%22%3A%7B%7D%7D)
 
 یا این را به `.vscode/mcp.json` اضافه کنید:
 
@@ -85,7 +85,7 @@ code --add-mcp '{\"name\":\"ganjoor-mcp-server\",\"command\":\"npx\",\"args\":[\
 برای نصب سرور Ganjoor MCP در اپلیکیشن Claude Desktop یا Cursor، روی نشان زیر کلیک کنید. این کار به‌طور
 خودکار سرور را به پیکربندی MCP شما اضافه می‌کند.
 
-[![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=io.github.ehsanghaffar%2Fganjoor-mcp-server&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImdhbmpvb3ItbWNwLXNlcnZlciJdLCJlbnYiOnt9fQ==)
+[![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=io.github.yusi20006-max%2Fganjoor-mcp-server&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImdhbmpvb3ItbWNwLXNlcnZlciJdLCJlbnYiOnt9fQ==)
 
 یا این را به فایل پیکربندی MCP خود اضافه کنید:
 
