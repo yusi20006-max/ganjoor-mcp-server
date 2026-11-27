@@ -63,12 +63,13 @@ async function main(): Promise<void> {
       expected: "فرخی سیستانی",
       run: async () => {
         const all: Array<Record<string, number | boolean | string | null>> = [];
-        for (let page = 1; page <= 3; page += 1) {
+        for (let page = 1; page <= 100; page += 1) {
           const { structured } = await call("ganjoor_list_poets", { page, page_size: 100 });
           const poets = structured.poets as Array<Record<string, unknown>>;
           if (!poets.length) break;
           all.push(...poets);
           if (!structured.has_more) break;
+          if (page === 100) throw new Error("Poet pagination exceeded the 100-page safety limit");
         }
         const c10 = all
           .filter(
