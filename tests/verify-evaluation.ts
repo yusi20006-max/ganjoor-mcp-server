@@ -166,7 +166,6 @@ async function main(): Promise<void> {
       label: "Q9 full title of page id 13836",
       expected: "رودکی » قصاید و قطعات » شمارهٔ ۲",
       run: async () => {
-        const { structured: url } = await call("ganjoor_get_page_url", { id: 13836 });
         const { structured } = await call("ganjoor_get_poem_by_id", {
           poem_id: 13836,
           include_recitations: false,
