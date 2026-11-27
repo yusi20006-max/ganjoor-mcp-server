@@ -9,10 +9,10 @@ const mock = http.createServer((req, res) => {
   res.setHeader("Content-Type", "application/json");
   if (req.url === "/api/ganjoor/cat/24/papersources") {
     res.writeHead(200);
-    res.end(JSON.stringify([
-      { id: 1, title: "Edition A", author: "Editor A", url: "https://example.org/a" },
-      { id: 2, title: "Edition B", author: "Editor B", url: "https://example.org/b" },
-    ]));
+    res.end(JSON.stringify(Array.from({ length: 102 }, (_, id) => ({
+      id, title: "Source " + id, author: "Editor " + id, url: id === 0 ? "javascript:alert(1)" : id === 2 ? "https://user:pass@example.org/2" : "https://example.org/" + id,
+    }))));
+  } else if (req.url === "/api/ganjoor/cat/25/papersources") { res.writeHead(200); res.end(JSON.stringify({ malformed: true, oversized: "x".repeat(20000) }));
   } else {
     res.writeHead(404);
     res.end(JSON.stringify({ error: "Not found" }));
@@ -36,17 +36,26 @@ try {
     name: "ganjoor_get_category_paper_sources",
     arguments: { cat_id: 24, response_format: "json" },
   });
-  assert.ok(!result.isError, "tool should return a successful result");
+  assert.ok(!result.isError, "successful tool result should not be marked as error");
   const data = result.structuredContent as Record<string, unknown>;
   assert.equal(data.category_id, 24);
-  assert.equal(data.returned, 2);
-  assert.equal(data.total, 2);
-  assert.equal(data.truncated, false);
-  assert.deepEqual(data.paper_sources, [
-    { id: 1, title: "Edition A", author: "Editor A", url: "https://example.org/a" },
-    { id: 2, title: "Edition B", author: "Editor B", url: "https://example.org/b" },
-  ]);
-  assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources"]);
+  assert.equal(data.returned, 100);
+  assert.equal(data.total, 102);
+  assert.equal(data.truncated, true);
+  const sources = data.paper_sources as Array<Record<string, unknown>>;
+  assert.equal(sources.length, 100);
+  assert.equal(sources[0].url, null, "unsafe non-http URL is nulled");
+  assert.equal(sources[1].url, "https://example.org/1");
+  assert.equal(sources[2].url, null, "credentialed URLs are removed");
+  assert.equal(data.upstream_shape_valid, true);
+  const malformed = await client.callTool({ name: "ganjoor_get_category_paper_sources", arguments: { cat_id: 25, response_format: "json" } });
+  assert.ok(!malformed.isError);
+  const malformedData = malformed.structuredContent as Record<string, unknown>;
+  assert.deepEqual(malformedData.paper_sources, []);
+  assert.equal(malformedData.upstream_shape_valid, false);
+  assert.equal(malformedData.returned, 0);
+  assert.equal(malformedData.total, 0);
+  assert.deepEqual(requests, ["/api/ganjoor/cat/24/papersources", "/api/ganjoor/cat/25/papersources"]);
   await client.close();
   await server.close();
 } finally {
