@@ -79,6 +79,7 @@ async function main(): Promise<void> {
               Number(p.death_year_hijri) > 0,
           )
           .sort((a, b) => Number(a.death_year_hijri) - Number(b.death_year_hijri));
+        console.log("Q3 matching poets:", JSON.stringify(c10.slice(0, 10).map((p) => ({ name: p.name, birth: p.birth_year_hijri, death: p.death_year_hijri }))));
         return c10[0]?.name ?? "NO_MATCH";
       },
     },
