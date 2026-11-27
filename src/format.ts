@@ -20,24 +20,57 @@ export function render(
   content: Array<{ type: "text"; text: string }>;
   structuredContent: Record<string, unknown>;
 } {
-  let text = format === ResponseFormat.JSON ? safeJson(data) : markdown;
-  let payload = data;
+  const originalText = format === ResponseFormat.JSON ? safeJson(data) : markdown;
+  let text = originalText;
+  let payload: Record<string, unknown> = data;
 
-  if (text.length > CHARACTER_LIMIT) {
-    text = clipMarkdown(text);
+  if (originalText.length > CHARACTER_LIMIT) {
+    const message =
+      `Response exceeded ${CHARACTER_LIMIT} characters and was clipped. ` +
+      "Narrow the request with page/page_size, items_count, or an `exclude_fields` argument.";
     payload = {
-      ...data,
+      ...boundedStructured(data),
       truncated: true,
-      truncation_message:
-        `Response exceeded ${CHARACTER_LIMIT} characters and was clipped. ` +
-        "Narrow the request with page/page_size, items_count, or an `exclude_fields` argument.",
+      truncation_message: message,
     };
+    if (format === ResponseFormat.JSON) {
+      text = safeJson(payload);
+      if (text.length > CHARACTER_LIMIT) {
+        payload = { truncated: true, truncation_message: message };
+        text = safeJson(payload);
+      }
+    } else {
+      text = clipMarkdown(markdown);
+    }
   }
 
   return {
     content: [{ type: "text", text }],
     structuredContent: payload,
   };
+}
+
+
+/** Bound structured payloads as well as the rendered text to prevent context overflow. */
+function boundedStructured(data: Record<string, unknown>): Record<string, unknown> {
+  const compactValue = (value: unknown, depth = 0): unknown => {
+    if (typeof value === "string") return value.length > 500 ? `${value.slice(0, 500)}…` : value;
+    if (value === null || typeof value !== "object") return value;
+    if (depth >= 4) return "[nested content omitted]";
+    if (Array.isArray(value)) {
+      const items = value.slice(0, 5).map((item) => compactValue(item, depth + 1));
+      if (value.length > 5) items.push(`… ${value.length - 5} more items` as never);
+      return items;
+    }
+    const entries = Object.entries(value as Record<string, unknown>).slice(0, 25);
+    return Object.fromEntries(entries.map(([key, item]) => [key, compactValue(item, depth + 1)]));
+  };
+  const compacted = compactValue(data) as Record<string, unknown>;
+  if (safeJson(compacted).length <= CHARACTER_LIMIT) return compacted;
+  const summary = Object.fromEntries(
+    Object.entries(data).filter(([, value]) => value === null || ["string", "number", "boolean"].includes(typeof value)).map(([key, value]) => [key, typeof value === "string" && value.length > 200 ? `${value.slice(0, 200)}…` : value]),
+  );
+  return summary;
 }
 
 /** Clip overlong markdown while keeping whole lines. */
