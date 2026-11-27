@@ -43,3 +43,8 @@ Key ideas:
 Workflow tip: browse with ganjoor_list_poets / ganjoor_get_poet / ganjoor_get_category,
 find a poem with ganjoor_search_poems, then read it with ganjoor_get_poem (by URL) or
 ganjoor_get_poem_by_id.`;
+
+/** Resolve the API base dynamically so tests and runtime overrides take effect after import. */
+export function getApiBaseUrl(): string {
+  return (process.env.GANJOOR_API_BASE_URL ?? API_BASE_URL).replace(/\/+$/, "");
+}

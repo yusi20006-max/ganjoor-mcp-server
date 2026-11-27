@@ -23,6 +23,7 @@
     "start:http": "HTTP=true node dist/index.js",
     "typecheck": "tsc --noEmit",
     "test": "tsx tests/smoke.test.ts",
+    "test:offline": "tsx tests/offline.test.ts",
     "inspect": "tsx tests/inspect-output.ts",
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
     "clean": "rm -rf dist"

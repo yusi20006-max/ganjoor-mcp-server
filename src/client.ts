@@ -1,4 +1,4 @@
-import { API_BASE_URL, REQUEST_TIMEOUT_MS } from "./constants.js";
+import { getApiBaseUrl, REQUEST_TIMEOUT_MS } from "./constants.js";
 import type { PagedList } from "./types.js";
 
 /**
@@ -73,7 +73,7 @@ function buildUrl(endpoint: string, params: Record<string, QueryValue>): string 
     }
   }
   const query = search.toString();
-  return `${API_BASE_URL}${endpoint}${query ? `?${query}` : ""}`;
+  return `${getApiBaseUrl()}${endpoint}${query ? `?${query}` : ""}`;
 }
 
 async function request<T>(url: string, endpoint: string): Promise<T> {
@@ -175,7 +175,7 @@ function toTransportError(error: unknown, endpoint: string): GanjoorApiError {
   }
   const message = error instanceof Error ? error.message : String(error);
   return new GanjoorApiError(
-    `Error: could not reach the Ganjoor API (${API_BASE_URL}) for ${endpoint}: ${message}. Check network connectivity and retry.`,
+    `Error: could not reach the Ganjoor API (${getApiBaseUrl()}) for ${endpoint}: ${message}. Check network connectivity and retry.`,
     null,
     endpoint,
   );
