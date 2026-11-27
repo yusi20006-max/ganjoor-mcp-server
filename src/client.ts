@@ -220,7 +220,7 @@ export async function fetchPaged<T>(
   // and return only the requested window. More than the extra-row probe proves that
   // the endpoint ignored paging. At the exact boundary, compare an adjacent page;
   // identical windows prove that the endpoint returned the same full collection.
-  const mayIgnorePaging = /\\/(poets|rhythms)$/.test(endpoint);
+  const mayIgnorePaging = /\/(poets|rhythms)$/.test(endpoint);
   let usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
   if (mayIgnorePaging && list.length === normalizedSize + 1) {
     const probePage = normalizedPage === 1 ? 2 : 1;
@@ -238,7 +238,7 @@ export async function fetchPaged<T>(
 
   const items = usesLocalPaging
     ? list.slice(start, start + normalizedSize)
-    : list.slice(0, normalizedSize);ze);
+    : list.slice(0, normalizedSize);
 
   return {
     items,
