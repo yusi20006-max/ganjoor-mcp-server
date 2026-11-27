@@ -217,15 +217,24 @@ export async function fetchPaged<T>(
 
   // The poets/rhythms endpoints have been observed in both modes: some responses
   // contain the full collection (then slice locally), while others honor PageNumber
-  // and return only the requested window. A response larger than this page plus the
-  // extra-row probe is the full-collection mode; otherwise treat it as upstream-paged.
+  // and return only the requested window. More than the extra-row probe proves that
+  // the endpoint ignored paging. At the exact boundary, compare an adjacent page;
+  // identical windows prove that the endpoint returned the same full collection.
   const mayIgnorePaging = /\/(poets|rhythms)$/.test(endpoint);
-  const usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
+  let usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
+  if (mayIgnorePaging && list.length === normalizedSize + 1) {
+    const probePage = normalizedPage === 1 ? 2 : 1;
+    const probeResponse = await ganjoorGet<T[]>(endpoint, {
+      ...params,
+      PageNumber: probePage,
+      PageSize: normalizedSize + 1,
+    });
+    const probeList = Array.isArray(probeResponse) ? probeResponse : [];
+    usesLocalPaging = JSON.stringify(probeList) === JSON.stringify(list);
+  }
   const hasMore = usesLocalPaging
     ? start + normalizedSize < list.length
-    : mayIgnorePaging
-      ? list.length >= normalizedSize
-      : list.length > normalizedSize;
+    : list.length > normalizedSize;
 
   const items = usesLocalPaging
     ? list.slice(start, start + normalizedSize)
