@@ -12,7 +12,8 @@ const mock = http.createServer((req, res) => {
     res.end(JSON.stringify(Array.from({ length: 102 }, (_, id) => ({
       id, title: "Source " + id, author: "Editor " + id, url: id === 0 ? "javascript:alert(1)" : id === 2 ? "https://user:pass@example.org/2" : "https://example.org/" + id,
     }))));
-  } else if (req.url === "/api/ganjoor/cat/25/papersources") { res.writeHead(200); res.end(JSON.stringify({ malformed: true, oversized: "x".repeat(20000) }));\n  } else {
+  } else if (req.url === "/api/ganjoor/cat/25/papersources") { res.writeHead(200); res.end(JSON.stringify({ malformed: true, oversized: "x".repeat(20000) }));
+  } else {
     res.writeHead(404);
     res.end(JSON.stringify({ error: "Not found" }));
   }
