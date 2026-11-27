@@ -3,6 +3,9 @@ name: Scripted MCP Evaluation
 on:
   pull_request:
     branches: [main]
+    paths:
+      - tests/verify-evaluation.ts
+      - evaluation/evaluation.xml
   workflow_dispatch:
 
 jobs:
