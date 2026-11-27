@@ -288,8 +288,11 @@ npm start            # انتقال stdio (پیش‌فرض)
 برای اجرای سرور روی HTTP، متغیرهای زیر را در اختیار کنید:
 
 ```bash
+export MCP_AUTH_TOKEN="$(openssl rand -hex 32)"
 HTTP=true PORT=3000 npm start
 ```
+
+ارسال درخواست به مسیر `/mcp` نیازمند هدر `Authorization: Bearer <token>` است. توکن باید دست‌کم ۳۲ نویسه داشته باشد؛ آن را در مخزن یا فایل‌های قابل‌انتشار ذخیره نکنید.
 
 نقطهٔ پایانی MCP، `POST /mcp` است و `GET /health` وضعیت سرور و سرویس بالادستی را نمایش می‌دهد.
 این انتقال به‌صورت Stateless اجرا می‌شود و برای هر درخواست نمونه‌ای تازه از سرور می‌سازد؛ بنابراین
@@ -311,6 +314,7 @@ npm run inspector
 است و تنها خروجی کامپایل‌شده و وابستگی‌های تولید را در بر دارد.
 
 ```bash
+export MCP_AUTH_TOKEN="$(openssl rand -hex 32)"
 docker compose up --build
 ```
 
@@ -321,7 +325,7 @@ docker compose up --build
 
 ```bash
 docker build -t ganjoor-mcp .
-docker run --rm -p 3000:3000 -e HTTP=true -e HOST=0.0.0.0 ganjoor-mcp
+docker run --rm -p 3000:3000 -e HTTP=true -e HOST=0.0.0.0 -e MCP_AUTH_TOKEN="$MCP_AUTH_TOKEN" ganjoor-mcp
 ```
 
 ### انتقال stdio روی داکر
