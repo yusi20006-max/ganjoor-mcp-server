@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "io.github.ehsanghaffar/ganjoor-mcp-server",
+  "name": "io.github.yusi20006-max/ganjoor-mcp-server",
   "description": "MCP server for the Ganjoor (گنجور) Persian classical poetry API at https://ganjoor.net",
   "repository": {
-    "url": "https://github.com/ganjoor/ganjoor-mcp-server",
+    "url": "https://github.com/yusi20006-max/ganjoor-mcp-server",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "1.0.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "ganjoor-mcp-server",
-      "version": "0.1.1",
+      "version": "1.0.0",
       "transport": {
         "type": "stdio"
       }

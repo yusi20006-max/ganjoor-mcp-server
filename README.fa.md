@@ -55,14 +55,14 @@ npm install ganjoor-mcp-server
 برای نصب سرور Ganjoor MCP در فضای کاری VS Code، روی نشان زیر کلیک کنید. این کار به‌طور خودکار سرور را به
 پیکربندی `.vscode/mcp.json` شما اضافه می‌کند.
 
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=io.github.ehsanghaffar%2Fganjoor-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ganjoor-mcp-server%22%5D%2C%22env%22%3A%7B%7D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=io.github.yusi20006-max%2Fganjoor-mcp-server&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ganjoor-mcp-server%22%5D%2C%22env%22%3A%7B%7D%7D)
 
 یا این را به `.vscode/mcp.json` اضافه کنید:
 
 ```json
 {
   "servers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
@@ -85,14 +85,14 @@ code --add-mcp '{\"name\":\"ganjoor-mcp-server\",\"command\":\"npx\",\"args\":[\
 برای نصب سرور Ganjoor MCP در اپلیکیشن Claude Desktop یا Cursor، روی نشان زیر کلیک کنید. این کار به‌طور
 خودکار سرور را به پیکربندی MCP شما اضافه می‌کند.
 
-[![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=io.github.ehsanghaffar%2Fganjoor-mcp-server&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImdhbmpvb3ItbWNwLXNlcnZlciJdLCJlbnYiOnt9fQ==)
+[![Install in Cursor](https://img.shields.io/badge/Install_in-Cursor-000000?style=flat-square&logoColor=white)](https://cursor.com/en/install-mcp?name=io.github.yusi20006-max%2Fganjoor-mcp-server&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImdhbmpvb3ItbWNwLXNlcnZlciJdLCJlbnYiOnt9fQ==)
 
 یا این را به فایل پیکربندی MCP خود اضافه کنید:
 
 ```json
 {
   "mcpServers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
@@ -113,11 +113,11 @@ code --add-mcp '{\"name\":\"ganjoor-mcp-server\",\"command\":\"npx\",\"args\":[\
 <details>
 <summary>Claude Code</summary>
 
-برای افزودن سرور MCP به‌نام io.github.ehsanghaffar/ganjoor-mcp-server از CLI رسمی Claude Code
+برای افزودن سرور MCP به‌نام io.github.yusi20006-max/ganjoor-mcp-server از CLI رسمی Claude Code
 استفاده کنید:
 
 ```bash
-claude mcp add io.github.ehsanghaffar/ganjoor-mcp-server npx -y ganjoor-mcp-server
+claude mcp add io.github.yusi20006-max/ganjoor-mcp-server npx -y ganjoor-mcp-server
 ```
 </details>
 
@@ -134,7 +134,7 @@ claude mcp add io.github.ehsanghaffar/ganjoor-mcp-server npx -y ganjoor-mcp-serv
 فایل پیکربندی `~/.codex/config.toml` را بسازید یا ویرایش کنید و این موارد را به آن اضافه کنید:
 
 ```toml
-[mcp_servers.io.github.ehsanghaffar/ganjoor-mcp-server]
+[mcp_servers.io.github.yusi20006-max/ganjoor-mcp-server]
 command = "npx"
 args = ["-y", "ganjoor-mcp-server"]
 ```
@@ -159,7 +159,7 @@ args = ["-y", "ganjoor-mcp-server"]
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "type": "local",
       "command": [
         "npx",
@@ -182,7 +182,7 @@ GitHub Copilot CLI هم از راه تعاملی و هم از راه فایل پ
 
 1. GitHub Copilot CLI را در حالت تعاملی باز کنید.
 2. دستور `/mcp add` را اجرا کنید.
-3. مقدار **Server Name** را `io.github.ehsanghaffar/ganjoor-mcp-server` وارد کنید.
+3. مقدار **Server Name** را `io.github.yusi20006-max/ganjoor-mcp-server` وارد کنید.
 4. مقدار **Server Type** را انتخاب کنید:
    - `STDIO` برای سرورهای مبتنی بر فرمان
    - `HTTP` برای سرورهای راه‌دور
@@ -194,7 +194,7 @@ GitHub Copilot CLI هم از راه تعاملی و هم از راه فایل پ
 ```json
 {
   "mcpServers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
@@ -222,7 +222,7 @@ GitHub Copilot CLI هم از راه تعاملی و هم از راه فایل پ
 ```json
 {
   "mcpServers": {
-    "io.github.ehsanghaffar/ganjoor-mcp-server": {
+    "io.github.yusi20006-max/ganjoor-mcp-server": {
       "command": "npx",
       "args": [
         "-y",
