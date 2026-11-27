@@ -5,7 +5,6 @@
  */
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { createServer } from "../src/server.js";
 import http from "node:http";
 import assert from "node:assert";
 
@@ -47,6 +46,8 @@ async function run() {
   
   // Point GANJOOR_API_BASE_URL to our mock server
   process.env.GANJOOR_API_BASE_URL = `http://127.0.0.1:${port}`;
+
+  const { createServer } = await import("../src/server.js");
 
   console.log(`Mock server running at http://127.0.0.1:${port}`);
 
