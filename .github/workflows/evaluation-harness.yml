@@ -1,11 +1,14 @@
 name: Scripted MCP Evaluation
 
 on:
+  push:
+    branches: [fix/evaluation-q3-paged-current-main]
   pull_request:
     branches: [main]
     paths:
       - tests/verify-evaluation.ts
       - evaluation/evaluation.xml
+      - .github/workflows/evaluation-harness.yml
   workflow_dispatch:
 
 jobs:
