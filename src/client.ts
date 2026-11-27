@@ -222,7 +222,7 @@ export async function fetchPaged<T>(
   // identical windows prove that the endpoint returned the same full collection.
   const mayIgnorePaging = /\/(poets|rhythms)$/.test(endpoint);
   let usesLocalPaging = mayIgnorePaging && list.length > normalizedSize + 1;
-  if (mayIgnorePaging && list.length === normalizedSize + 1) {
+  if (mayIgnorePaging && normalizedPage > 1 && list.length === normalizedSize + 1) {
     const probePage = normalizedPage === 1 ? 2 : 1;
     const probeResponse = await ganjoorGet<T[]>(endpoint, {
       ...params,
