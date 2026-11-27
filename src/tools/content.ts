@@ -418,8 +418,8 @@ Notes:
       const data = {
         category_id: input.cat_id,
         paper_sources: sources,
-        returned: list ? Math.min(list.length, 100) : null,
-        total: list ? list.length : null,
+        returned: sources.length,
+        total: list ? list.length : 0,
         truncated: list ? list.length > 100 : false,
         upstream_shape_valid: list !== null,
       };
