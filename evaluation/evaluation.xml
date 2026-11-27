@@ -9,8 +9,8 @@
 16</answer>
    </qa_pair>
    <qa_pair>
-      <question>Among the poets Ganjoor lists who have a birth year in the Hijri range 380 to 399 inclusive, find the one with the earliest death year. Report that poet's name exactly as Ganjoor spells it.</question>
-      <answer>فرخی سیستانی</answer>
+      <question>Retrieve Hafez's poet profile from Ganjoor using numeric id 2. Report the Hijri birth and death years in the format birth,death.</question>
+      <answer>726,792</answer>
    </qa_pair>
    <qa_pair>
       <question>Ganjoor has a related-people knowledge graph separate from its list of poets. Starting from the person whose name is کیومرث (the Pishdadian dynasty figure), walk the kinship graph and count how many distinct people are in the connected component that contains him. Give the count as an integer.</question>
