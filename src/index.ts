@@ -128,7 +128,8 @@ async function main(): Promise<void> {
           id: null,
         });
       }
-    },
+    }
+  },
   );
 
   await checkUpstream();
