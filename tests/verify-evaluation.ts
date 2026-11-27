@@ -60,16 +60,14 @@ async function main(): Promise<void> {
     {
       q: 3,
       label: "Q3 Hafez profile birth and death years",
-      expected: "PENDING",
+      expected: "726,792",
       run: async () => {
         const { structured } = await call("ganjoor_get_poet", {
           id: 2,
           include_cats: false,
           response_format: "json",
         });
-        const result = `${structured.name} | birth=${structured.birth_year_hijri} | death=${structured.death_year_hijri}`;
-        console.log("Q3 Hafez profile:", result);
-        return result;
+        return `${structured.birth_year_hijri},${structured.death_year_hijri}`;
       },
     },
         {
