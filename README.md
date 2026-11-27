@@ -305,6 +305,8 @@ npm run inspector
 ---
 
 ## Docker
+See [HTTP Deployment Security](HTTP_DEPLOYMENT_SECURITY.md) for supported exposure modes, bearer-token handling, reverse-proxy requirements, and Origin-check limitations.
+
 
 A multi-stage `Dockerfile` and a `docker-compose.yml` are included. The image is built on
 `node:22-alpine` and contains only the compiled output and production dependencies.
