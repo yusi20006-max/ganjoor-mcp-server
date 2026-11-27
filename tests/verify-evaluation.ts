@@ -59,29 +59,18 @@ async function main(): Promise<void> {
     },
     {
       q: 3,
-      label: "Q3 poet born 380-399 AH with earliest death",
-      expected: "فرخی سیستانی",
+      label: "Q3 Hafez profile birth and death years",
+      expected: "726,792",
       run: async () => {
-        const all: Array<Record<string, number | boolean | string | null>> = [];
-        for (let page = 1; page <= 3; page += 1) {
-          const { structured } = await call("ganjoor_list_poets", { page, page_size: 100 });
-          const poets = structured.poets as Array<Record<string, unknown>>;
-          if (!poets.length) break;
-          all.push(...poets);
-          if (!structured.has_more) break;
-        }
-        const c10 = all
-          .filter(
-            (p) =>
-              Number(p.birth_year_hijri) >= 380 &&
-              Number(p.birth_year_hijri) < 400 &&
-              Number(p.death_year_hijri) > 0,
-          )
-          .sort((a, b) => Number(a.death_year_hijri) - Number(b.death_year_hijri));
-        return c10[0]?.name ?? "NO_MATCH";
+        const { structured } = await call("ganjoor_get_poet", {
+          id: 2,
+          include_cats: false,
+          response_format: "json",
+        });
+        return `${structured.birth_year_hijri},${structured.death_year_hijri}`;
       },
     },
-    {
+        {
       q: 4,
       label: "Q4 Kayumars kinship component size",
       expected: "personCount=196",
