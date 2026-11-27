@@ -6,7 +6,7 @@
    <qa_pair>
       <question>Find the prosodic metre that the largest number of poems on Ganjoor are written in — call it the most-used metre. Then find Hafez's ghazal number 494 at URL /hafez/ghazal/sh494 and report its metre. Is the ghazal written in that most-used metre? Answer True or False, then on a second line give the verse count of ghazal 494 as an integer.</question>
       <answer>False
-8</answer>
+16</answer>
    </qa_pair>
    <qa_pair>
       <question>Among the poets Ganjoor lists who have a birth year in the Hijri range 380 to 399 inclusive, find the one with the earliest death year. Report that poet's name exactly as Ganjoor spells it.</question>
@@ -14,7 +14,7 @@
    </qa_pair>
    <qa_pair>
       <question>Ganjoor has a related-people knowledge graph separate from its list of poets. Starting from the person whose name is کیومرث (the Pishdadian dynasty figure), walk the kinship graph and count how many distinct people are in the connected component that contains him. Give the count as an integer.</question>
-      <answer>56</answer>
+      <answer>196</answer>
    </qa_pair>
    <qa_pair>
       <question>Count how many separate audio recitations Ganjoor has published for Hafez's ghazal number 494 at URL /hafez/ghazal/sh494. Give the count as an integer.</question>
