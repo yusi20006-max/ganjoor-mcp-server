@@ -408,19 +408,20 @@ Notes:
           if (typeof normalized[key] === "string") {
             try {
               const parsed = new URL(normalized[key] as string);
-              normalized[key] = parsed.protocol === "http:" || parsed.protocol === "https:" ? parsed.toString() : null;
+              normalized[key] = (parsed.protocol === "http:" || parsed.protocol === "https:") && !parsed.username && !parsed.password ? parsed.toString() : null;
             } catch { normalized[key] = null; }
           }
         }
         return normalized;
       };
-      const sources = list ? list.slice(0, 100).map(normalize) : raw;
+      const sources = list ? list.slice(0, 100).map(normalize) : [];
       const data = {
         category_id: input.cat_id,
         paper_sources: sources,
         returned: list ? Math.min(list.length, 100) : null,
         total: list ? list.length : null,
         truncated: list ? list.length > 100 : false,
+        upstream_shape_valid: list !== null,
       };
       return {
         data,
