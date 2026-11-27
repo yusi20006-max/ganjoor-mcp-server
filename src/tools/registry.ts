@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { ZodObject, ZodRawShape } from "zod";
 import { toActionableError } from "../client.js";
 import { ResponseFormat } from "../schemas.js";
+import { render } from "../format.js";
 
 /** Structured payload every tool returns alongside its rendered text. */
 export interface ToolPayload {
@@ -50,13 +51,7 @@ export function defineTool<S extends ZodRawShape>(
         const result = await handler(args);
         const format = (args.response_format as ResponseFormat) ?? ResponseFormat.MARKDOWN;
         const markdown = result.markdown(args);
-        const text =
-          format === ResponseFormat.JSON ? JSON.stringify(result.data, null, 2) : markdown;
-
-        return {
-          content: [{ type: "text" as const, text }],
-          structuredContent: result.data,
-        };
+        return render(format, result.data, markdown);
       } catch (error) {
         return {
           isError: true,
