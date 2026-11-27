@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ganjoorGet } from "../client.js";
 import { IdSchema, ResponseFormatSchema } from "../schemas.js";
-import { bullets, md, siteUrl } from "../format.js";
+import { bullets, md, siteUrl, safeJson } from "../format.js";
 import { defineTool, READ_ONLY } from "./registry.js";
 import type { GanjoorQuotedPoem } from "../types.js";
 
@@ -362,6 +362,62 @@ Notes:
               "this poem has no geo tags",
             ),
             "",
+          ),
+      };
+    },
+  );
+
+  defineTool(
+    server,
+    {
+      name: "ganjoor_get_category_paper_sources",
+      title: "Get Category Paper Sources",
+      description: `Get bibliographic and paper-source metadata associated with a Ganjoor category or poet collection.
+
+This read-only endpoint can surface print editions and other source references for poetry research.
+
+Args:
+  - cat_id (number): Numeric Ganjoor category id
+  - response_format ('markdown' | 'json'): Output format (default: 'markdown')
+
+Returns:
+  For JSON: { category_id, paper_sources, returned, total, truncated }
+
+Examples:
+  - "Find paper sources for Hafez ghazals" -> cat_id=24
+
+Notes:
+  - This tool returns metadata only. It does not fetch, download, or validate external source URLs.
+  - At most 100 records are returned to keep the response bounded.`,
+      inputSchema: z
+        .object({
+          cat_id: IdSchema.describe("Numeric Ganjoor category id."),
+          response_format: ResponseFormatSchema,
+        })
+        .strict(),
+      annotations: READ_ONLY,
+    },
+    async (args) => {
+      const input = args as unknown as { cat_id: number };
+      const raw = await ganjoorGet<unknown>(`/api/ganjoor/cat/${input.cat_id}/papersources`);
+      const list = Array.isArray(raw) ? raw : null;
+      const sources = list ? list.slice(0, 100) : raw;
+      const data = {
+        category_id: input.cat_id,
+        paper_sources: sources,
+        returned: list ? Math.min(list.length, 100) : null,
+        total: list ? list.length : null,
+        truncated: list ? list.length > 100 : false,
+      };
+      return {
+        data,
+        markdown: () =>
+          md(
+            `# Paper sources for category ${input.cat_id}`,
+            "",
+            list ? `Returned ${data.returned} of ${data.total} source records${data.truncated ? " (truncated to 100)" : ""}.` : "Source response was returned as a non-list payload.",
+            "",
+            safeJson({ paper_sources: sources }),
           ),
       };
     },

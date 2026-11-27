@@ -410,6 +410,7 @@ graph TD
 | `ganjoor_get_category` | A category with breadcrumb, sub-sections, and contained poems. |
 | `ganjoor_list_category_poems` | Paginated poems in a category, with optional title filter. |
 | `ganjoor_get_category_geotags` | Geographic/historical places tagged under a category's subtree. |
+| `ganjoor_get_category_paper_sources` | Bibliographic/paper-source metadata associated with a category. |
 | `ganjoor_get_category_people_graph` | People network behind a category's "characters" tab. |
 
 ### Poems
