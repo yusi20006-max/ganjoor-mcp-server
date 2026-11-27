@@ -19,7 +19,6 @@ decision is marked **verify/defer** rather than inferred.
 | Audio recitations | Yes | Search/get/list recitations and timing | Tool surface present | Keep |
 | Interpretations/commentary | Python feature reported | Recent comments and FAQ tools; no dedicated interpretation tool identified | Public Swagger surface reviewed; interpretation endpoint not identified | Defer; distinguish comment/FAQ from formal interpretation |
 | Manuscript museum / paper sources | Python feature reported | Poem images available; no paper-source/museum tool in TypeScript registry | Swagger lists `GET /api/ganjoor/cat/{id}/papersources` and Artifact museum APIs, so endpoint support exists but is not exposed in MCP | Candidate for a focused tool, after response-shape fixtures |
-| Tajik poems | Python feature reported | No Tajik-specific tool; language-tagged sections are not equivalent | Swagger explicitly lists `GET /api/ganjoor/tajik/poets`, `/tajik/page`, and `/tajik/search`; API support is confirmed | High-value candidate for a focused read-only MCP tool set |
 | People/family trees | Yes | Person lookup, relations, family-tree graph | Tool surface present | Keep |
 | Images, geotags, corrections | Yes | Poem images, geotags, corrections | Tool surface present | Keep |
 | Comments and FAQ | Yes | Comments and FAQ tools | Tool surface present | Keep |
@@ -27,17 +26,17 @@ decision is marked **verify/defer** rather than inferred.
 ## Public API evidence
 
 The official public Swagger page (https://api.ganjoor.net/index.html) was checked on 2026-11-26.
-It documents Tajik endpoints (`/api/ganjoor/tajik/poets`, `/page`, `/search`) and category paper-source
-lookup (`/api/ganjoor/cat/{id}/papersources`). The TypeScript server does not currently expose these
-Tajik-specific or paper-source endpoints. The Swagger list reviewed did not identify a dedicated verse
-search or formal interpretation endpoint; this is not proof such data does not exist elsewhere.
+It documents category paper-source lookup (`/api/ganjoor/cat/{id}/papersources`) and Artifact museum
+APIs. The TypeScript server does not currently expose these paper-source/museum workflows. The Swagger
+list reviewed did not identify a dedicated verse-search or formal interpretation endpoint; this is not
+proof such data does not exist elsewhere.
 
 ## Summary
 
 The TypeScript server covers many core public Ganjoor workflows, but this static comparison **does not
-support a claim of complete high-value parity**. In particular, dedicated verse search, poem
-interpretation, museum-catalog workflows, and Tajik-specific retrieval remain unverified or not
-identified. Semantic search is present but depends on the upstream embedding feature.
+support a claim of complete high-value parity**. Dedicated verse search, poem interpretation, and
+museum-catalog workflows remain unverified or not identified. Semantic search is present but depends on
+the upstream embedding feature.
 
 No Python source was copied. The reference repository's license must be reviewed before any code
 porting. This matrix recommends keeping existing tools, verifying API support before adding new
