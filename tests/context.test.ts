@@ -30,6 +30,17 @@ async function testContextManagement() {
   assert.strictEqual(rendered.content.length, 1);
   assert.strictEqual(rendered.structuredContent.foo, "bar");
 
+  // Structured data must be bounded even when the markdown rendering is short.
+  const structuredOnly = render(
+    ResponseFormat.MARKDOWN,
+    { comments: ["x".repeat(CHARACTER_LIMIT + 1)] },
+    "# Short markdown"
+  );
+  assert.equal(structuredOnly.content[0].text, "# Short markdown");
+  assert.equal(structuredOnly.structuredContent.truncated, true);
+  assert.ok(JSON.stringify(structuredOnly.structuredContent).length <= CHARACTER_LIMIT);
+  assert.ok(String((structuredOnly.structuredContent.comments as string[])[0]).length < 600);
+
   const hugeMarkdown = "line\\n".repeat(CHARACTER_LIMIT);
   const clipped = render(ResponseFormat.MARKDOWN, { hugeMarkdown }, hugeMarkdown);
   assert.equal(clipped.structuredContent.truncated, true);
