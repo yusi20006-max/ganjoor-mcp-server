@@ -27,7 +27,8 @@
     "inspect": "tsx tests/inspect-output.ts",
     "inspector": "npx @modelcontextprotocol/inspector node dist/index.js",
     "clean": "rm -rf dist",
-    "test:pagination": "tsx tests/pagination.test.ts"
+    "test:pagination": "tsx tests/pagination.test.ts",
+    "test:context": "tsx tests/context.test.ts"
   },
   "keywords": [
     "mcp",
